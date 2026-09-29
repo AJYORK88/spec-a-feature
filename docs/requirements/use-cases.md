@@ -21,7 +21,7 @@ This document is the behavioral specification of Project Pulse — every user-in
 
 ## **Scope**
 
-This catalog covers Project Pulse end to end — the shared foundation (course sections, teams, students, instructors, accounts, rubrics), the performance-tracking workflows (weekly activity reports, peer evaluations), and the Requirements Authoring & Management (RAM) areas (templates and provisioning, glossary, documents, artifacts, links, validation, collaboration, review and submission, export, AI configuration, and AI assistants). Other docs cite use cases by identifier rather than restate their flows: the [Software Requirements Specification](software-requirements-specification.md) lists each `UC-<AREA>-<slug>` in its Use Cases section as a high-level functional requirement, [traceability.md](../traceability.md) carries one row per use case mapping it to the non-use-case `FR-<AREA>-<slug>`s it honors, the area design doc that realizes it, and the code modules and tests that implement it, and per-area design docs cite the use cases they design. In the other direction, this document cites business rules ([business-rules.md](business-rules.md), `BR-<slug>`) in each use case's Business Rules field and uses defined terms from [project-glossary.md](project-glossary.md) verbatim.
+This catalog covers Project Pulse end to end — the shared foundation (course sections, teams, students, instructors, accounts, rubrics), the performance-tracking workflows (weekly activity reports, peer evaluations, submission tracking), and the Requirements Authoring & Management (RAM) areas (templates and provisioning, glossary, documents, artifacts, links, validation, collaboration, review and submission, export, AI configuration, and AI assistants). Other docs cite use cases by identifier rather than restate their flows: the [Software Requirements Specification](software-requirements-specification.md) lists each `UC-<AREA>-<slug>` in its Use Cases section as a high-level functional requirement, [traceability.md](../traceability.md) carries one row per use case mapping it to the non-use-case `FR-<AREA>-<slug>`s it honors, the area design doc that realizes it, and the code modules and tests that implement it, and per-area design docs cite the use cases they design. In the other direction, this document cites business rules ([business-rules.md](business-rules.md), `BR-<slug>`) in each use case's Business Rules field and uses defined terms from [project-glossary.md](project-glossary.md) verbatim.
 
 # **Use Case Template**
 
@@ -76,7 +76,7 @@ The headings below describe each field of the use-case template (Wiegers & Beatt
 
 # **Use Case List**
 
-The catalog of use cases begins below, grouped by area. Each area is an unnumbered H2 sub-heading and each use case an H3 carrying an area-prefixed ID (`UC-<AREA>-<slug>`). The catalog spans both the foundation and performance-tracking areas — Rubric, Course Section, Team, Student, Instructor, Account, Weekly Activity Report, and Peer Evaluation — and the requirements-authoring areas that follow them (Templates and Provisioning, Glossary, Requirement Documents, Requirement Artifacts, Artifact Links and Tracing, Validation, Collaboration, Review and Submission, Export, AI Configuration, and AI Assistants).
+The catalog of use cases begins below, grouped by area. Each area is an unnumbered H2 sub-heading and each use case an H3 carrying an area-prefixed ID (`UC-<AREA>-<slug>`). The catalog spans both the foundation and performance-tracking areas — Rubric, Course Section, Team, Student, Instructor, Account, Weekly Activity Report, Peer Evaluation, and Submission Tracking — and the requirements-authoring areas that follow them (Templates and Provisioning, Glossary, Requirement Documents, Requirement Artifacts, Artifact Links and Tracing, Validation, Collaboration, Review and Submission, Export, AI Configuration, and AI Assistants).
 
 The note below is **not** the catalog. It records scope context only: a few Project Pulse capabilities not yet specified as use cases, and work that is **deferred or on hold**. Anything that has been specified appears as a `UC-<AREA>-<slug>` below — not in this note.
 
@@ -2441,6 +2441,89 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 **Related Use Cases:**
 **Assumptions:**
 **Open Issues:**
+
+## **Submission Tracking**
+
+### **UC-SUB-nudge-non-submitters: The instructor nudges the students who have not submitted their weekly work**
+
+**UC ID and Name:** UC-SUB-nudge-non-submitters: Nudge the students who have not submitted their weekly work
+**Created By:** Andrew York
+**Date Created:** 29/Sep/26
+**Primary Actor:** instructor
+**Secondary Actors:** student (the recipient of a nudge); the Gmail SMTP integration (CO-gmail-smtp)
+**Trigger:** The instructor indicates to nudge the students of a course section who have not submitted their weekly work.
+**Description:** The instructor wants to email a reminder to only those students of her course section who have not submitted their weekly activity report or peer evaluation, so that she can prompt the students who are behind without emailing the students who are done.
+
+**Preconditions:**
+- PRE-1. The instructor is logged into the system.
+- PRE-2. The instructor is assigned to the course section (BR-section-scoped-access).
+
+**Postconditions:**
+- POST-1. Every student marked to be nudged whose address the mail server accepted has been sent one nudge email naming the item(s) she has not submitted.
+- POST-2. Each nudge sent is recorded against its student and week (BR-nudge-limit).
+- POST-3. The instructor has been informed which students were nudged, and which were not and why.
+
+**Main Success Scenario:**
+1. The instructor indicates to nudge the students of a course section who have not submitted their weekly work.
+2. The system determines the week to check: the previous week, for both the weekly activity report and the peer evaluation (for the peer evaluation, per BR-evaluation-submission-window).
+3. The system retrieves the students of the course section and determines, for each student, which of the two items she has not submitted (BR-submission-complete).
+4. The system displays the students who have not submitted according to the "Non-submitter list" defined in the Associated Information of this use case.
+5. The instructor verifies the list and confirms to send the nudges.
+6. The system sends each student marked to be nudged one email according to the "Nudge email" defined in the Associated Information of this use case, through the Gmail SMTP integration.
+7. The system records each nudge it sent (BR-nudge-limit).
+8. The system informs the instructor how many students were nudged.
+9. Use case ends.
+
+**Extensions:**
+- **1a. The instructor is not assigned to the course section:**
+  - 1a1. The system does not display the course section's submissions and informs the instructor that she may nudge only the students of a course section she is assigned to (BR-section-scoped-access).
+  - 1a2. Use case ends.
+- **2a. The previous week is not one of the course section's active weeks:**
+  - 2a1. The system does not check or nudge about the peer evaluation, and informs the instructor that no peer evaluation is due for that week (BR-active-weeks).
+  - 2a2. The system checks the weekly activity report only, which may be submitted in any week (BR-active-weeks), and continues at step 3.
+- **2b. The submission window for the previous week's peer evaluation has closed:**
+  - 2b1. The system does not nudge about the peer evaluation, and informs the instructor that a missed peer evaluation cannot be made up (BR-evaluation-submission-window).
+  - 2b2. The system checks the weekly activity report only, and continues at step 3.
+- **3a. A student is not assigned to a team:**
+  - 3a1. The system lists the student as not assigned to a team and does not mark her to be nudged, because she cannot submit either item (BR-team-assignment-required).
+  - 3a2. The use case continues at step 4 with the remaining students.
+- **3b. A student has already been nudged the maximum number of times for the week:**
+  - 3b1. The system lists the student as having reached the nudge limit and does not mark her to be nudged (BR-nudge-limit).
+  - 3b2. The use case continues at step 4 with the remaining students.
+- **3c. Every student has submitted:**
+  - 3c1. The system informs the instructor that every student in the course section has submitted her weekly work.
+  - 3c2. Use case ends.
+- **4a. No listed student is marked to be nudged** (every non-submitter is not assigned to a team or has reached the nudge limit):
+  - 4a1. The system displays the list, informs the instructor that no student can be nudged, and does not offer to send.
+  - 4a2. Use case ends.
+- **5a. The instructor chooses not to send:**
+  - 5a1. The system sends no email and records no nudge.
+  - 5a2. Use case ends.
+- **6a. The mail server rejects a student's address:**
+  - 6a1. The system does not record a nudge for that student and continues sending to the remaining students.
+  - 6a2. At step 8, the system also informs the instructor which students could not be reached.
+
+**Priority:** Medium
+**Frequency of Use:** Approximately 2 users, a few usages per week.
+**Business Rules:** BR-section-scoped-access (the instructor nudges only the students of a course section she is assigned to), BR-role-based-access (a course admin holds this instructor capability; a student may neither nudge nor see who has not submitted), BR-team-assignment-required, BR-active-weeks, BR-evaluation-submission-window, BR-submission-complete, BR-nudge-limit
+
+**Associated Information:**
+
+Non-submitter list:
+- One row per student of the course section who has not submitted at least one item, showing: student name, team, the item(s) not submitted (weekly activity report, peer evaluation, or both), and whether she will be nudged (to be nudged / not assigned to a team / nudge limit reached).
+- Sorted by last name in ascending order.
+- The list is a student educational record (CO-ferpa) and is shown only to the instructor performing this use case.
+
+Nudge email:
+- A fixed system message; the instructor does not add text.
+- Addressed to the student by first name. It names only the item(s) she has not submitted and their due days and times as configured for the course section.
+- It never names or counts other students.
+
+**Related Use Cases:** UC-WAR-manage-activities, UC-EVA-submit-evaluation, UC-EVA-section-evaluation-report
+**Assumptions:** The membership of each team does not change during the week being checked, so "every member of her team" in BR-submission-complete is unambiguous.
+**Open Issues:**
+- UC-WAR-manage-activities lists activity statuses as "In progress, Under testing, Done", but the Business Domain Model and the code define only IN_PROGRESS and COMPLETED. BR-submission-complete uses COMPLETED.
+- UC-WAR-manage-activities step 2 has the student select an active week, but BR-active-weeks allows a weekly activity report in any week, and the code does not check active weeks. This use case follows BR-active-weeks.
 
 ## **Templates and Provisioning**
 
