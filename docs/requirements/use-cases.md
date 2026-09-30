@@ -2460,7 +2460,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 
 **Postconditions:**
 - POST-1. Every student marked to be nudged whose address the mail server accepted has been sent one nudge email naming the item(s) she has not submitted.
-- POST-2. Each nudge sent is recorded against its student and week (BR-nudge-limit).
+- POST-2. Each nudge sent is recorded against its student and the week it concerns (BR-nudge-limit).
 - POST-3. The instructor has been informed which students were nudged, and which were not and why.
 
 **Main Success Scenario:**
@@ -2487,7 +2487,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 - **3a. A student is not assigned to a team:**
   - 3a1. The system lists the student as not assigned to a team and does not mark her to be nudged, because she cannot submit either item (BR-team-assignment-required).
   - 3a2. The use case continues at step 4 with the remaining students.
-- **3b. A student has already been nudged the maximum number of times for the week:**
+- **3b. A student has already been nudged the maximum number of times about the week being checked:**
   - 3b1. The system lists the student as having reached the nudge limit and does not mark her to be nudged (BR-nudge-limit).
   - 3b2. The use case continues at step 4 with the remaining students.
 - **3c. Every student has submitted:**
