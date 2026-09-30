@@ -2481,9 +2481,6 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 - **2a. The previous week is not one of the course section's active weeks:**
   - 2a1. The system does not check or nudge about the peer evaluation, and informs the instructor that no peer evaluation is due for that week (BR-active-weeks).
   - 2a2. The system checks the weekly activity report only, which may be submitted in any week (BR-active-weeks), and continues at step 3.
-- **2b. The submission window for the previous week's peer evaluation has closed:**
-  - 2b1. The system does not nudge about the peer evaluation, and informs the instructor that a missed peer evaluation cannot be made up (BR-evaluation-submission-window).
-  - 2b2. The system checks the weekly activity report only, and continues at step 3.
 - **3a. A student is not assigned to a team:**
   - 3a1. The system lists the student as not assigned to a team and does not mark her to be nudged, because she cannot submit either item (BR-team-assignment-required).
   - 3a2. The use case continues at step 4 with the remaining students.
