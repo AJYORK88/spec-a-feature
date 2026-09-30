@@ -2528,6 +2528,7 @@ Nudge email:
 **Open Issues:**
 - UC-WAR-manage-activities lists activity statuses as "In progress, Under testing, Done", but the Business Domain Model and the code define only IN_PROGRESS and COMPLETED. BR-submission-complete uses COMPLETED.
 - UC-WAR-manage-activities step 2 has the student select an active week, but BR-active-weeks allows a weekly activity report in any week, and the code does not check active weeks. This use case follows BR-active-weeks.
+- UC-EVA-section-evaluation-report shows who did not turn in the peer evaluation for a week, and its implementation counts a student with at least one evaluation as having turned it in. BR-submission-complete requires every teammate to be evaluated, so the report and this use case can disagree about the same student.
 
 ## **Templates and Provisioning**
 
