@@ -2475,8 +2475,8 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 9. Use case ends.
 
 **Extensions:**
-- **1a. The instructor is not assigned to the course section:**
-  - 1a1. The system does not display the course section's submissions and informs the instructor that she may nudge only the students of a course section she is assigned to (BR-section-scoped-access).
+- **1a. The user is neither an instructor assigned to the course section nor the course admin of its course:**
+  - 1a1. The system refuses the request with its standard permission denial and shows none of the course section's students or submissions (BR-section-scoped-access, BR-role-based-access).
   - 1a2. Use case ends.
 - **2a. The previous week is not one of the course section's active weeks:**
   - 2a1. The system does not check or nudge about the peer evaluation, and informs the instructor that no peer evaluation is due for that week (BR-active-weeks).
