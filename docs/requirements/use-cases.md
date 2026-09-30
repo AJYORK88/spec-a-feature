@@ -2520,7 +2520,7 @@ Non-submitter list:
 
 Nudge email:
 - A fixed system message; the instructor does not add text.
-- Addressed to the student by first name. It names only the item(s) she has not submitted and their due days and times as configured for the course section.
+- Addressed to the student by first name. It names only the item(s) she has not submitted and when each was due, in the past tense (for example, "was due Monday 11:59 PM"), using the due day and time configured for the course section.
 - It never names or counts other students.
 
 **Related Use Cases:** UC-WAR-manage-activities, UC-EVA-submit-evaluation, UC-EVA-section-evaluation-report
