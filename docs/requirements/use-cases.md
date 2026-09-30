@@ -2459,7 +2459,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 - PRE-2. The instructor is assigned to the course section (BR-section-scoped-access).
 
 **Postconditions:**
-- POST-1. Every student marked to be nudged whose address the mail server accepted has been sent one nudge email naming the item(s) she has not submitted.
+- POST-1. Every student the instructor left selected, who was still to be nudged when the email was sent and whose address the mail server accepted, has been sent one nudge email naming the item(s) she has not submitted.
 - POST-2. Each nudge sent is recorded against its student and the week it concerns (BR-nudge-limit).
 - POST-3. The instructor has been informed which students were nudged, and which were not and why.
 
@@ -2468,8 +2468,8 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 2. The system determines the week to check: the previous week, for both the weekly activity report and the peer evaluation (for the peer evaluation, per BR-evaluation-submission-window).
 3. The system retrieves the students of the course section and determines, for each student, which of the two items she has not submitted (BR-submission-complete).
 4. The system displays the students who have not submitted according to the "Non-submitter list" defined in the Associated Information of this use case.
-5. The instructor verifies the list and confirms to send the nudges.
-6. The system sends each student marked to be nudged one email according to the "Nudge email" defined in the Associated Information of this use case, through the Gmail SMTP integration.
+5. The instructor verifies the list, deselects any student she chooses not to nudge, and confirms to send the nudges to the students still selected.
+6. The system sends each selected student one email according to the "Nudge email" defined in the Associated Information of this use case, through the Gmail SMTP integration.
 7. The system records each nudge it sent (BR-nudge-limit).
 8. The system informs the instructor how many students were nudged.
 9. Use case ends.
@@ -2496,12 +2496,15 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 - **4a. No listed student is marked to be nudged** (every non-submitter is not assigned to a team or has reached the nudge limit):
   - 4a1. The system displays the list, informs the instructor that no student can be nudged, and does not offer to send.
   - 4a2. Use case ends.
-- **5a. The instructor chooses not to send:**
+- **5a. The instructor chooses not to send, or deselects every student:**
   - 5a1. The system sends no email and records no nudge.
   - 5a2. Use case ends.
 - **6a. The mail server rejects a student's address:**
   - 6a1. The system does not record a nudge for that student and continues sending to the remaining students.
   - 6a2. At step 8, the system also informs the instructor which students could not be reached.
+- **6b. A selected student has submitted her weekly work, or has reached the nudge limit, since the list was displayed:**
+  - 6b1. The system does not send that student a nudge; a nudge is sent only to a student who is still to be nudged when the email is sent (BR-submission-complete, BR-nudge-limit).
+  - 6b2. At step 8, the system also informs the instructor which students were not nudged for this reason.
 
 **Priority:** Medium
 **Frequency of Use:** Approximately 2 users, a few usages per week.
@@ -2512,6 +2515,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 Non-submitter list:
 - One row per student of the course section who has not submitted at least one item, showing: student name, team, the item(s) not submitted (weekly activity report, peer evaluation, or both), and whether she will be nudged (to be nudged / not assigned to a team / nudge limit reached).
 - Sorted by last name in ascending order.
+- Every student marked to be nudged is selected by default, and only those students can be selected.
 - The list is a student educational record (CO-ferpa) and is shown only to the instructor performing this use case.
 
 Nudge email:
