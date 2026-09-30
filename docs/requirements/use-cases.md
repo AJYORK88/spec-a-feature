@@ -2520,7 +2520,7 @@ Nudge email:
 - It never names or counts other students.
 
 **Related Use Cases:** UC-WAR-manage-activities, UC-EVA-submit-evaluation, UC-EVA-section-evaluation-report
-**Assumptions:** The membership of each team does not change during the week being checked, so "every member of her team" in BR-submission-complete is unambiguous.
+**Assumptions:**
 **Open Issues:**
 - UC-WAR-manage-activities lists activity statuses as "In progress, Under testing, Done", but the Business Domain Model and the code define only IN_PROGRESS and COMPLETED. BR-submission-complete uses COMPLETED.
 - UC-WAR-manage-activities step 2 has the student select an active week, but BR-active-weeks allows a weekly activity report in any week, and the code does not check active weeks. This use case follows BR-active-weeks.
